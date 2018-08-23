@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <iomanip>
-#include "quaternioni.c"
+#include "quaternioni.h"
 #include <vector> 
 using namespace std; 
 void Amleto()
