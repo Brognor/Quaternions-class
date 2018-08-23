@@ -10,11 +10,6 @@ void decisione ()
 	{cout <<"Vuoi inizializzare il quaternione con le componenti (g) o come operatore di rotazione?(u) ";}
 void caratteristiche ()
 	{cout <<"Vuoi conoscere le caratteristiche di questo quaternione?(s/n) ";}
-void caratteristiche2 ()
-	{cout <<"Vuoi conoscere le caratteristiche del secondo quaternione?(s/n) ";}
-void operazioni ()
-	{cout <<"Vuoi eseguire operazioni con un altro quaternione?(s/n) ";}
-
 
 void funzuno (quaternioni *p) {
 	cout <<"Per i due quaternioni le operazioni danno i seguenti risultati:\n" 
