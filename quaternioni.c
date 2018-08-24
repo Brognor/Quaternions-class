@@ -1,156 +1,235 @@
 #include <iostream>
 #include <cmath>
 #include <iomanip>
-#include "quaternioni.h"
+#include "Quaternioni.h"
 
 using namespace std;
 
-quaternioni quaternioni::operator = (quaternioni b) //uguaglianza
+Quaternioni::Quaternioni(double a, double i , double j, double k) {componenti[0]=(a), componenti[1]=(i), componenti[2]=(j), componenti[3]=(k);};
+
+Quaternioni::Quaternioni(double angolo, double *vet) {
+	componenti[0]=cos(angolo/2); 
+	double k;
+	k=sqrt(1/(vet[0]*vet[0]+vet[1]*vet[1]+vet[2]*vet[2]));
+	componenti[1]=vet[0]*k*sin(angolo/2); componenti[2]=vet[1]*k*sin(angolo/2); componenti[3]=vet[2]*k*sin(angolo/2);};
+
+double Quaternioni::norm()
+	{return (sqrt(
+	this->componenti[0]*this->componenti[0]+
+	this->componenti[1]*this->componenti[1]+
+	this->componenti[2]*this->componenti[2]+
+	this->componenti[3]*this->componenti[3])
+	);}
+
+Quaternioni & Quaternioni::operator = (Quaternioni b) //assegnamento
 	{for (int p=0; p<4; ++p) {
-	this->co[p]=b.co[p];}
-	return *this;
-}
+	this->componenti[p]=b.componenti[p];}
+	return *this;}
 
+Quaternioni & Quaternioni::operator += (Quaternioni  b) //+=
+	{for (int i=0; ++i; i<4) {this->componenti[i]+=b.componenti[i];}
+	return *this;}
 
-quaternioni quaternioni::operator + (quaternioni  b) //somma
-	{quaternioni c;
-	for (int p=0; p<4; ++p)
-	{c.co[p]=this->co[p]+b.co[p];}
+Quaternioni Quaternioni::operator + (Quaternioni  b) //somma
+	{Quaternioni a=*this;
+	a+=b;
+	return a;}
+
+Quaternioni & Quaternioni::operator -= (Quaternioni  b) //-=
+	{for (int i=0; ++i; i<4) {this->componenti[i]-=b.componenti[i];} 
+	return *this;}
+
+Quaternioni Quaternioni::operator - (Quaternioni  b) //sottrazione
+	{Quaternioni c=*this;
+	c-=b;
 	return c;}
 
-quaternioni quaternioni::operator - (quaternioni  b) //sottrazione
-	{quaternioni c;
-	for (int p=0; p<4; ++p)
-	{c.co[p]=this->co[p]-b.co[p];}
-	return c;}
-
-quaternioni quaternioni::operator += (quaternioni  b) //+=
-	{for (int i=0; ++i; i<4) {this->co[i]+=b.co[i];} return *this;}
-
-quaternioni quaternioni::operator -= (quaternioni  b) //-=
-	{for (int i=0; ++i; i<4) {this->co[i]-=b.co[i];} return *this;}
-
-quaternioni quaternioni::operator *= (quaternioni b) //*=
-{quaternioni c;
-c=*this;
-*this=(c*b);
-return *this
-;
-} 
-	
-
-
-quaternioni quaternioni::operator * (quaternioni b) //prodotto
-	{quaternioni c;
-	c.co[0]=this->co[0]*b.co[0]-this->co[1]*b.co[1]-this->co[2]*b.co[2]-this->co[3]*b.co[3];  //Re
-	c.co[1]=this->co[0]*b.co[1]+this->co[1]*b.co[0]+this->co[2]*b.co[3]-this->co[3]*b.co[2]; // i
-	c.co[2]=this->co[0]*b.co[2]-this->co[1]*b.co[3]+this->co[2]*b.co[0]+this->co[3]*b.co[1]; // j
-	c.co[3]=this->co[0]*b.co[3]+this->co[1]*b.co[2]-this->co[2]*b.co[1]+this->co[3]*b.co[0]; // k
+Quaternioni Quaternioni::operator * (Quaternioni b) //prodotto
+	{Quaternioni c;
+	c.componenti[0]=this->componenti[0]*b.componenti[0]-this->componenti[1]*b.componenti[1]-this-> 		     		componenti[2]*b.componenti[2]-this->componenti[3]*b.componenti[3];  //Re
+	c.componenti[1]=this->componenti[0]*b.componenti[1]+this->componenti[1]*b.componenti[0]+this-> 		 	 componenti[2]*b.componenti[3]-this->componenti[3]*b.componenti[2]; // i
+	c.componenti[2]=this->componenti[0]*b.componenti[2]-this->componenti[1]*b.componenti[3]+this-> 		 	 componenti[2]*b.componenti[0]+this->componenti[3]*b.componenti[1]; // j
+	c.componenti[3]=this->componenti[0]*b.componenti[3]+this->componenti[1]*b.componenti[2]-this->      	 	 componenti[2]*b.componenti[1]+this->componenti[3]*b.componenti[0]; // k
         return c;}
 
 
+Quaternioni & Quaternioni::operator *= (Quaternioni b) //*=
+	{Quaternioni c;
+	c=*this;
+	*this=(c*b);
+	return *this;} 
 
-quaternioni quaternioni::operator * () //coniugato
-	{quaternioni c;
-	c.co[0]=this->co[0]; c.co[1]=-this->co[1]; c.co[2]=-this->co[2]; c.co[3]=-this->co[3];
+
+Quaternioni Quaternioni::operator ~ () //coniugato
+	{Quaternioni c;
+	c.componenti[0]=this->componenti[0]; 
+	c.componenti[1]=-this->componenti[1]; 
+	c.componenti[2]=-this->componenti[2]; 
+	c.componenti[3]=-this->componenti[3];
 	return c;}
 
-quaternioni quaternioni::operator -- () //inverso
-    {quaternioni c;
-    double m=this->co[0]*this->co[0]+this->co[1]*this->co[1]+this->co[2]*this->co[2]+this->co[3]*this->co[3];
-    c.co[0]=this->co[0]/m; c.co[1]=-this->co[1]/m; c.co[2]=-this->co[2]/m; c.co[3]=-this->co[3]/m;
-    return c;}
+Quaternioni Quaternioni::operator ! () //inverso
+        {Quaternioni c;
+	double m=this->componenti[0]*this->componenti[0]+this->componenti[1]*this->componenti[1]+
+	this->componenti[2]*this->componenti[2]+this->componenti[3]*this->componenti[3];
+    	c.componenti[0]=this->componenti[0]/m; 
+	c.componenti[1]=-this->componenti[1]/m; 
+	c.componenti[2]=-this->componenti[2]/m; 
+	c.componenti[3]=-this->componenti[3]/m;
+        return c;}
 
 	
-double quaternioni::operator / (quaternioni b) //distanza
-
+double Quaternioni::operator | (Quaternioni b) //distanza
 	{double distanza;
-        distanza=~(*this-b);
+        distanza=(*this-b).norm();
 	return distanza;}
 
-quaternioni quaternioni::operator -() // opposto
-	{for (int i=0; i<4; ++i)
-	{co[i]*=-1;}; return *this;}
+Quaternioni Quaternioni::operator -() // opposto
+	{Quaternioni a=*this;
+	a*=-1;
+	return a;}
 
-quaternioni quaternioni::operator +() // se stesso medesimo
+Quaternioni Quaternioni::operator +() // se stesso medesimo
 	{return *this;}
+
+Quaternioni & Quaternioni::operator *= (double g) // *= scalare
+	{for (int p=0; p<4; ++p)
+	{this->componenti[p]*=g;}
+	return *this;}
+
+Quaternioni & Quaternioni::operator /= (double g) // /= scalare
+	{for (int p=0; p<4; ++p)
+	{this->componenti[p]/=g;}
+	return *this;
+	}
+Quaternioni Quaternioni::operator * (double g) // * scalare
+	{Quaternioni c=*this;
+	c*=g;
+	return c;}
+
+Quaternioni Quaternioni::operator / (double g) // / scalare
+	{Quaternioni c=*this;
+	c/=g;
+	return c;}
+
+Quaternioni operator *= (double a, Quaternioni p) // *= scalare
+	{Quaternioni Al(a,0.,0.,0.);
+	Al*=p;
+	return Al;} 
 	
+Quaternioni operator * (double a, Quaternioni p) // * scalare
+	{return p*a;} 
 
-double quaternioni::operator ~ () //modulo
-	{return (sqrt(this->co[0]*this->co[0]+this->co[1]*this->co[1]+this->co[2]*this->co[2]+this->co[3]*this->co[3]))
-	;}
+double Quaternioni::angle() //angolo di rotazione
+	{return 2*acos(this->componenti[0]);}
 
-double quaternioni::operator !() //angolo di rotazione
-	{return 2*acos(this->co[0]);}
+bool Quaternioni::operator == (Quaternioni j)
+	{this->componenti[0]==j.componenti[0] && 
+	this->componenti[1]==j.componenti[1] && 
+	this->componenti[2]==j.componenti[2] && 
+	this->componenti[3]==j.componenti[3];};
 
-quaternioni quaternioni::operator * (double g) // * scalare
-	{quaternioni c;
-	for (int p=0; p<4; ++p)
-	{c.co[p]=this->co[p]*g;}
-	return c;
-	}
-
-quaternioni quaternioni::operator / (double g) // / scalare
-	{quaternioni c;
-	for (int p=0; p<4; ++p)
-	{c.co[p]=this->co[p]/g;}
-	return c;
-	}
-
-quaternioni quaternioni::operator *= (double g) // *= scalare
-	{for (int p=0; p<4; ++p)
-	{this->co[p]*=g;}
-	return *this;
-	}
-
-quaternioni quaternioni::operator /= (double g) // /= scalare
-	{for (int p=0; p<4; ++p)
-	{this->co[p]/=g;}
-	return *this;
-	}
-
-
-quaternioni::quaternioni(double a, double i , double j, double k) {co[0]=(a), co[1]=(i), co[2]=(j), co[3]=(k);};
-quaternioni::quaternioni(double angolo, double *vet) {
-	co[0]=cos(angolo/2); 
-	double k;
-	k=sqrt(1/(vet[0]*vet[0]+vet[1]*vet[1]+vet[2]*vet[2]));
-	co[1]=vet[0]*k*sin(angolo/2); co[2]=vet[1]*k*sin(angolo/2); co[3]=vet[2]*k*sin(angolo/2);}
- 
-quaternioni quaternioni::rot (quaternioni quat) {return (*this)*quat*(--(*this));}
-bool quaternioni::ver () {if (abs(~(*this)-1)<=0.01) return true;
-else return false;}
-
-
-
-ostream & operator << (ostream & o, quaternioni b) //scrittura
-{ return o <<setprecision(3) <<fixed <<noshowpos  << b.co[0]  <<showpos  <<b.co[1] <<"i"  << b.co[2] <<"j" << b.co[3] <<"k"; 
-}
+bool Quaternioni::operator != (Quaternioni j) 
+	{return !(*this==j);};
 
 
  
+Quaternioni Quaternioni::rot (Quaternioni quat) 
+	{return (*this)*quat*(!(*this));}
 
-SOtre::SOtre(quaternioni q): s(1/(~q)*(~q)) {el[0][0]=1-2*s*(q.co[2]*q.co[2]+q.co[3]*q.co[3]),  el[0][1]=2*s*(q.co[1]*q.co[2]-q.co[3]*q.co[0]),       el[0][2]=2*s*(q.co[1]*q.co[3]+q.co[2]*q.co[0]), 
-                      el[1][0]=2*s*(q.co[1]*q.co[2]+q.co[3]*q.co[0]),  el[1][1]=1-2*s*(q.co[1]*q.co[1]+q.co[3]*q.co[3]), el[1][2]=2*s*(q.co[2]*q.co[3]-q.co[1]*q.co[0]),
-                      el[2][0]=2*s*(q.co[1]*q.co[3]-q.co[2]*q.co[0]),  el[2][1]=2*s*(q.co[2]*q.co[3]+q.co[1]*q.co[0]), el[2][2]=1-2*s*(q.co[1]*q.co[1]+q.co[2]*q.co[2]);}
+bool Quaternioni::isNorm (double soglia=0.01) 
+	{return (abs((this->norm())-1)<=soglia);}
+
+bool Quaternioni::isNorm () 
+	{return (abs((this->norm())-1)<=0.01);}
+
+double Quaternioni::Get_Cr() {
+	return this->componenti[0];}
+
+double Quaternioni::Get_Ci() {
+	return this->componenti[1];}
+
+double Quaternioni::Get_Cj() {
+	return this->componenti[2];}
+
+double Quaternioni::Get_Ck() {
+	return this->componenti[3];}
+
+ostream & operator << (ostream & o, Quaternioni b) //scrittura
+	{return o <<setprecision(3) <<fixed <<noshowpos  << b.componenti[0]
+	<<showpos  <<b.componenti[1] <<"i"  
+	<<b.componenti[2] <<"j" 
+	<<b.componenti[3] <<"k";}
+ 
+SOtre::SOtre(Quaternioni q): s(1/(q.norm()*(q.norm()))) {
+	elemento[0][0]=1-2*s*(q.Get_Cj()*q.Get_Cj()+q.Get_Ck()*q.Get_Ck()),  
+	elemento[0][1]=2*s*(q.Get_Ci()*q.Get_Cj()-q.Get_Ck()*q.Get_Cr()),       
+	elemento[0][2]=2*s*(q.Get_Ci()*q.Get_Ck()+q.Get_Cj()*q.Get_Cr()), 
+	elemento[1][0]=2*s*(q.Get_Ci()*q.Get_Cj()+q.Get_Ck()*q.Get_Cr()),  
+	elemento[1][1]=1-2*s*(q.Get_Ci()*q.Get_Ci()+q.Get_Ck()*q.Get_Ck()), 
+	elemento[1][2]=2*s*(q.Get_Cj()*q.Get_Ck()-q.Get_Ci()*q.Get_Cr()),
+	elemento[2][0]=2*s*(q.Get_Ci()*q.Get_Ck()-q.Get_Cj()*q.Get_Cr()), 
+	elemento[2][1]=2*s*(q.Get_Cj()*q.Get_Ck()+q.Get_Ci()*q.Get_Cr()), 
+	elemento[2][2]=1-2*s*(q.Get_Ci()*q.Get_Ci()+q.Get_Cj()*q.Get_Cj());}
+
+double SOtre::Get_El11()
+	{return this->elemento[0][0];}
+
+double SOtre::Get_El12()
+	{return this->elemento[0][1];}
+
+double SOtre::Get_El13()
+	{return this->elemento[0][2];}
+	
+double SOtre::Get_El21()
+	{return this->elemento[1][0];}
+	
+double SOtre::Get_El22()
+	{return this->elemento[1][1];}
+
+double SOtre::Get_El23()
+	{return this->elemento[1][2];}
+
+double SOtre::Get_El31()
+	{return this->elemento[2][0];}
+
+double SOtre::Get_El32()
+	{return this->elemento[2][1];}
+
+double SOtre::Get_El33()
+	{return this->elemento[2][2];}
 
 
 
-
-
-ostream & operator << (ostream & o, SOtre s) //scrittura SO3
+ostream & operator << (ostream & o, SOtre a) //scrittura SO3
 	{ return  o <<fixed <<setprecision(2)  
-	<<setw(12) <<s.el[0][0] <<setw(12) <<s.el[0][1]  <<setw(12) <<s.el[0][2] <<endl
-	<<setw(12) <<s.el[1][0] <<setw(12) <<s.el[1][1]  <<setw(12) <<s.el[1][2] <<endl
-	<<setw(12) <<s.el[2][0] <<setw(12) <<s.el[2][1]  <<setw(12) <<s.el[2][2]  <<endl;}
+	<<setw(12) <<a.elemento[0][0] <<setw(12) <<a.elemento[0][1]  <<setw(12) <<a.elemento[0][2] <<endl
+	<<setw(12) <<a.elemento[1][0] <<setw(12) <<a.elemento[1][1]  <<setw(12) <<a.elemento[1][2] <<endl
+	<<setw(12) <<a.elemento[2][0] <<setw(12) <<a.elemento[2][1]  <<setw(12) <<a.elemento[2][2]  <<endl;}
 
 
+Vettori::Vettori(Quaternioni q) {
+	coordinate[0]=q.Get_Ci()/(sin(acos(q.Get_Cr())));
+	coordinate[1]=q.Get_Cj()/(sin(acos(q.Get_Cr())));
+	coordinate[2]=q.Get_Ck()/(sin(acos(q.Get_Cr())));}
 
-vettori::vettori(quaternioni q){for (int i=0; i<3; ++i) {co[i]=q.co[i+1]/(sin(acos(q.co[0])));}
-;}
+double Vettori::Get_x() {
+	return this->coordinate[0];}
 
-ostream & operator << (ostream & o, vettori v) //scrittura
-{return o <<setprecision(2) <<fixed <<noshowpos <<v.co[0] <<' ' <<v.co[1] <<' ' <<v.co[2];}
+double Vettori::Get_y() {
+	return this->coordinate[1];}
+
+double Vettori::Get_z() {
+	return this->coordinate[2];}
+
+
+ostream & operator << (ostream & o, Vettori v) //scrittura
+	{return o <<setprecision(2) <<fixed <<noshowpos 
+	<<(v.coordinate[0]) <<' ' 
+	<<(v.coordinate[1]) <<' '
+	<<(v.coordinate[2]);}
+
+
 
 
 
