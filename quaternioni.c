@@ -27,7 +27,7 @@ Quaternioni & Quaternioni::operator = (Quaternioni b) //assegnamento
 	return *this;}
 
 Quaternioni & Quaternioni::operator += (Quaternioni  b) //+=
-	{for (int i=0; ++i; i<4) {this->componenti[i]+=b.componenti[i];}
+	{for (int i=0; i<4; ++i) {this->componenti[i]+=b.componenti[i];}
 	return *this;}
 
 Quaternioni Quaternioni::operator + (Quaternioni  b) //somma
@@ -36,7 +36,7 @@ Quaternioni Quaternioni::operator + (Quaternioni  b) //somma
 	return a;}
 
 Quaternioni & Quaternioni::operator -= (Quaternioni  b) //-=
-	{for (int i=0; ++i; i<4) {this->componenti[i]-=b.componenti[i];} 
+	{for (int i=0; i<4; ++i) {this->componenti[i]-=b.componenti[i];} 
 	return *this;}
 
 Quaternioni Quaternioni::operator - (Quaternioni  b) //sottrazione
