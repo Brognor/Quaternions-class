@@ -1,70 +1,118 @@
-struct quaternioni { 
-double co [4]; //componenti
+#ifndef QUATERNIONI_H
+#define QUATERNIONI_H
+class Quaternioni { 
+double componenti [4]; //componenti
+public:
+Quaternioni & operator = (Quaternioni); //assegnamento 
 
-quaternioni operator = (quaternioni); //uguaglianza
+Quaternioni & operator += (Quaternioni); //+=	
+
+Quaternioni operator + (Quaternioni); //somma
+
+Quaternioni & operator -= (Quaternioni); //-=
 	
-quaternioni operator + (quaternioni); //somma
+Quaternioni operator - (Quaternioni); //sottrazione	
+
+Quaternioni & operator *= (Quaternioni); //*=
+
+Quaternioni operator * (Quaternioni); //prodotto
+		
+Quaternioni operator ~ (); //coniugato
 	
-quaternioni operator - (quaternioni); //sottrazione	
+double operator | (Quaternioni); //distanza
 
-quaternioni operator += (quaternioni); //+=
+Quaternioni operator -(); // opposto
+
+Quaternioni operator +(); // se stesso medesimo
+
+Quaternioni  operator !(); //inverso
 	
-quaternioni operator -= (quaternioni); //-=
+Quaternioni operator * (double); // * scalare
 
-quaternioni operator *= (quaternioni); //*=
+Quaternioni operator / (double); // / scalare	
+
+Quaternioni & operator *= (double); // *= scalare
 	
-quaternioni operator * (quaternioni); //prodotto
+Quaternioni & operator /= (double); // /= scalare
+
+friend Quaternioni operator * (double, Quaternioni); // * scalare	
+
+friend Quaternioni operator *= (double, Quaternioni); // *= scalare
+
+
+bool operator == (Quaternioni)	;
+
+bool operator != (Quaternioni);
+
+Quaternioni ()=default;
+
+Quaternioni(double , double , double , double );
+
+Quaternioni(double , double *);
+
+Quaternioni rot (Quaternioni);
+
+bool isNorm (double);
+
+bool isNorm ();
+
+double norm(); //modulo
+
+double angle(); //angolo di rotazione
+
+double Get_Cr(); //Getter quaternioni
+
+double Get_Ci();
+
+double Get_Cj();
+
+double Get_Ck();
+
+friend std::ostream & operator << (std::ostream & , Quaternioni ); //scrittura
+};// [Quaternioni]
+
+class SOtre //Struct SO3
+	{double elemento [3][3];
+	double s;
+	public:
+	SOtre(Quaternioni);
 	
-quaternioni operator * (); //coniugato
+	SOtre()=default;
 
-quaternioni operator -- (); //inverso
-	
-double operator / (quaternioni); //distanza
+	friend std::ostream & operator << (std::ostream & , SOtre ) ;//scrittura SO3
 
-quaternioni operator -(); // opposto
+	double Get_El11(); //Getter matrice
 
-quaternioni operator +(); // se stesso medesimo
+	double Get_El12();
 
-double operator ~ (); //modulo
+	double Get_El13();
 
-double operator !(); //angolo di rotazione
-	
-quaternioni operator * (double); // * scalare
+	double Get_El21();
 
-quaternioni operator / (double); // / scalare	
+	double Get_El22();
 
-quaternioni operator *= (double); // *= scalare
-	
-quaternioni operator /= (double); // /= scalare
-	
-quaternioni ()=default;
+	double Get_El23();
 
-quaternioni(double , double , double , double );
+	double Get_El31();
 
-quaternioni(double , double *);
+	double Get_El32();
 
-quaternioni rot (quaternioni);
+	double Get_El33();}; //[SO3]
 
-bool ver ();
-   //******************************//
-}; //fine della classe quaternioni//
-   //****************************//
+class Vettori{
+	double coordinate[3];
+	public:
+	Vettori()=default;
 
+	Vettori(Quaternioni);
 
-struct SOtre //Struct SO3
-{double el [3][3];
-double s;
-SOtre(quaternioni);
+	friend std::ostream & operator << (std::ostream & , Vettori );
 
-SOtre()=default;
-}; //fine struct SO3
+	double Get_x(); //Getter vettori
 
-	
-struct vettori{
-vettori()=default;
-double co[3];
-vettori(quaternioni);
-};
-std::ostream & operator << (std::ostream & , vettori );
-std::ostream & operator << (std::ostream & , SOtre ) ;//scrittura SO3
-std::ostream & operator << (std::ostream & , quaternioni ); //scrittura
+	double Get_y();
+
+	double Get_z();
+	};//[Vettori]
+
+#endif
