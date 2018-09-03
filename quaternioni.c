@@ -6,9 +6,9 @@
 using namespace std;
 
 
-Quaternioni::Quaternioni(double a, double i , double j, double k) {componenti[0]=(a), componenti[1]=(i), componenti[2]=(j), componenti[3]=(k);};
+template <class X> Quaternioni<X>::Quaternioni(X a, X i , X j, X k) {componenti[0]=(a), componenti[1]=(i), componenti[2]=(j), componenti[3]=(k);};
 
-Quaternioni::Quaternioni(double angolo, double *vet) {
+template <class X> Quaternioni<X>::Quaternioni(X angolo, X *vet) {
 	componenti[0]=cos(angolo/2); 
 	double k;
 	k=sqrt(1/(vet[0]*vet[0]+vet[1]*vet[1]+vet[2]*vet[2]));
@@ -16,38 +16,74 @@ Quaternioni::Quaternioni(double angolo, double *vet) {
 	componenti[2]=vet[1]*k*sin(angolo/2); 
 	componenti[3]=vet[2]*k*sin(angolo/2);};
 
-double Quaternioni::norm() const
+template <class X> double  Quaternioni<X>::norm() const
 	{return (sqrt(
 	this->componenti[0]*this->componenti[0]+
 	this->componenti[1]*this->componenti[1]+
 	this->componenti[2]*this->componenti[2]+
 	this->componenti[3]*this->componenti[3]));}
 
-Quaternioni & Quaternioni::operator = (Quaternioni b) //assegnamento
+template <class X> Quaternioni<X> & Quaternioni<X>::operator = (Quaternioni<X> b) //assegnamento
 	{for (int p=0; p<4; ++p) {
 	this->componenti[p]=b.componenti[p];}
 	return *this;}
 
-Quaternioni & Quaternioni::operator += (Quaternioni  b) //+=
+template <class X> Quaternioni <X> &  Quaternioni<X>::operator += (Quaternioni <X> b) //+=
 	{for (int i=0; i<4; ++i) {this->componenti[i]+=b.componenti[(i)];}
 	return *this;}
 
-Quaternioni operator + (const Quaternioni a, Quaternioni  b) //somma
-	{Quaternioni r=a;
+template <class X> Quaternioni <X> operator + (const Quaternioni<X> a, Quaternioni<X>  b) //somma
+	{Quaternioni <X> r=a;
 	r+=b;
 	return r;}
 
-Quaternioni & Quaternioni::operator -= (Quaternioni  b) //-=
+template <class X> Quaternioni <X> & Quaternioni<X>::operator += (const X a) //+= num
+	{this->componenti[0]+=a;
+	return *this;}
+	
+	
+template <class X> Quaternioni<X> operator + (const Quaternioni<X>  a, const X b)//somma num
+	{Quaternioni<X> c=a;
+	c+=b;
+	return c;}
+
+template <class X> Quaternioni <X> operator += (X a, const Quaternioni <X> b) //num +=
+	{Quaternioni<X> Al(a,0,0,0);
+	return Al+=b;}
+
+template <class X> Quaternioni <X> operator + (const X a, const Quaternioni <X> b) //num somma
+	{X c=a;
+	return c+=b;}
+
+template <class X> Quaternioni <X> &  Quaternioni <X>::operator -= (Quaternioni <X>  b) //-=
 	{for (int i=0; i<4; ++i) {this->componenti[i]-=b.componenti[i];}
 	return *this;}
 
-Quaternioni operator - (const Quaternioni c, Quaternioni  b) //sottrazione
-	{Quaternioni o=c;
+template <class X> Quaternioni <X> operator - (const Quaternioni  <X> c, Quaternioni <X> b) //sottrazione
+	{Quaternioni <X>o=c;
 	o-=b;
 	return o;}
 
-Quaternioni & Quaternioni::operator *= (Quaternioni b) //prodotto
-	{Quaternioni t=*this;
+template <class X> Quaternioni <X> & Quaternioni<X>::operator -= (X a) //-= num
+	{this->componenti[0]-=a;
+	return *this;}
+
+template <class X> Quaternioni<X> operator - (Quaternioni<X> const a, const X b) //sottrazione num
+	{Quaternioni<X> c=a;
+	c-=b;
+	return c;}
+
+template <class X> Quaternioni <X> operator -= (X a, Quaternioni <X> b) //num -=
+	{Quaternioni<X> Al(a,0,0,0);
+	return Al-=b;}
+
+template <class X> Quaternioni <X> operator -(X a, Quaternioni <X> b) //num sottrazione
+	{X c=a;
+	return c-=b;}
+
+
+template <class X>  Quaternioni <X> & Quaternioni <X>::operator *= (Quaternioni<X> b) //prodotto
+	{Quaternioni <X> t=*this;
 	this->componenti[0]=t.componenti[0]*b.componenti[0]-t.componenti[1]*b.componenti[1]-t.componenti[2]*b.componenti[2]-t.componenti[3]*b.componenti[3];  //Re
 	this->componenti[1]=t.componenti[0]*b.componenti[1]+t.componenti[1]*b.componenti[0]+t. 		 	 	 componenti[2]*b.componenti[3]-t.componenti[3]*b.componenti[2]; // i
 	this->componenti[2]=t.componenti[0]*b.componenti[2]-t.componenti[1]*b.componenti[3]+t. 		 	 	 componenti[2]*b.componenti[0]+t.componenti[3]*b.componenti[1]; // j
@@ -55,24 +91,26 @@ Quaternioni & Quaternioni::operator *= (Quaternioni b) //prodotto
         return *this;}
 
 
-Quaternioni operator * (Quaternioni const c, const Quaternioni b) //*=
-	{Quaternioni p=c;
+template <class X> Quaternioni <X> operator * (Quaternioni <X> const c, const Quaternioni <X> b) //*=
+	{Quaternioni <X> p=c;
 	p*=b;
 	return p;} 
 
 
-Quaternioni operator ~ (Quaternioni const t) //coniugato
-	{Quaternioni c;
+template <class X> Quaternioni <X> operator ~ (Quaternioni <X> const t) //coniugato
+	{Quaternioni <X> c;
 	c.componenti[0]=t.componenti[0]; 
 	c.componenti[1]=-t.componenti[1]; 
 	c.componenti[2]=-t.componenti[2]; 
 	c.componenti[3]=-t.componenti[3];
 	return c;}
 
-Quaternioni operator ! (const Quaternioni a) //inverso
-        {Quaternioni c=a;
+template <class X> Quaternioni <X> operator ! (const Quaternioni <X> a) //inverso
+        {Quaternioni<X> c=a;
 	double m=a.componenti[0]*a.componenti[0]+a.componenti[1]*a.componenti[1]+
 	a.componenti[2]*a.componenti[2]+a.componenti[3]*a.componenti[3];
+	if (m==0) cout <<"Errore\n";
+	else
     	c.componenti[0]=a.componenti[0]/m; 
 	c.componenti[1]=-a.componenti[1]/m; 
 	c.componenti[2]=-a.componenti[2]/m; 
@@ -80,89 +118,94 @@ Quaternioni operator ! (const Quaternioni a) //inverso
         return c;}
 
 	
-double operator | (const Quaternioni a, const Quaternioni b) //distanza
+template <class X> double operator | (const Quaternioni <X> a, const Quaternioni <X> b) //distanza
 	{double distanza;
         distanza=(a-b).norm();
 	return distanza;}
 
-Quaternioni operator -(Quaternioni const a) // opposto
-	{Quaternioni b=a;
+template <class X> Quaternioni <X> operator -(Quaternioni <X> const a) // opposto
+	{Quaternioni <X> b=a;
 	b*=-1;
 	return b;}
 
-Quaternioni operator +(Quaternioni const b) // se stesso medesimo
+template <class X> Quaternioni <X> operator +(Quaternioni <X> const b) // se stesso medesimo
 	{return b;}
 
-Quaternioni & Quaternioni::operator *= (double g) // *= scalare
+template <class X> Quaternioni<X> &  Quaternioni <X>::operator *= (X g) // *= scalare
 	{for (int p=0; p<4; ++p)
 	{this->componenti[p]*=g;}
 	return *this;}
 
-Quaternioni & Quaternioni::operator /= (double g) // /= scalare
-	{for (int p=0; p<4; ++p)
-	{this->componenti[p]/=g;}
+template <class X>  Quaternioni <X> & Quaternioni<X>::operator /= (X g) // /= scalare
+	{if (g==0) cout <<"Errore\n";
+	else 
+	for (int p=0; p<4; ++p)
+		{this->componenti[p]/=g;}
 	return *this;
 	}
-Quaternioni operator * (const Quaternioni q, double g) // * scalare
-	{Quaternioni r=q;
+template <class X> Quaternioni <X> operator * (const Quaternioni <X> q, X g) // * scalare
+	{Quaternioni <X> r=q;
 	r*=g;
 	return r;}
 
-Quaternioni operator / (const Quaternioni c ,double g) // / scalare
-	{Quaternioni r=c;
+template <class X> Quaternioni <X> operator / (const Quaternioni <X> c ,X g) // / scalare
+	{if(g==0) cout <<"Errore\n"
+	else
+	Quaternioni <X> r=c;
 	r/=g;
 	return r;}
 
-Quaternioni operator *= (double a, const Quaternioni p) // *= scalare
-	{Quaternioni Al(a,0.,0.,0.);
+template <class X> Quaternioni <X> operator *= (X a, const Quaternioni <X> p) // *= scalare
+	{Quaternioni <X> Al(a,0.,0.,0.);
 	Al*=p;
 	return Al;} 
 	
-Quaternioni operator * (double a, const Quaternioni p) // * scalare
-	{return p*a;} 
+template <class X> Quaternioni <X> operator * (X a, const Quaternioni<X> p) // * scalare
+	{X c=a;
+	return c*=p;} 
 
-double Quaternioni::angle() const //angolo di rotazione
+template <class X> double  Quaternioni <X>::angle() const //angolo di rotazione
 	{return 2*acos(this->componenti[0]);}
 
-bool operator == (const Quaternioni & t, const Quaternioni & j)
+template <class X> bool operator == (const Quaternioni <X> & t, const Quaternioni <X> & j)
 	{t.componenti[0]==j.componenti[0] && 
 	t.componenti[1]==j.componenti[1] && 
 	t.componenti[2]==j.componenti[2] && 
 	t.componenti[3]==j.componenti[3];};
 
-bool operator != (const Quaternioni & t, const Quaternioni & j) 
+template <class X> bool operator != (const Quaternioni<X> & t, const Quaternioni<X> & j) 
 	{return !(t==j);};
 
 
  
-Quaternioni Quaternioni::rot (Quaternioni quat) const
-	{return (*this)*quat*(!(*this));}
+template <class X> Quaternioni<X>  Quaternioni<X>::rot (Quaternioni<X> quat) const
+	{return ((*this)*quat)*(!(*this));}
 
-bool Quaternioni::isNorm (double soglia=0.01)  const
+template <class X> bool  Quaternioni<X>::isNorm (double soglia)  const
 	{return (abs((this->norm())-1)<=soglia);}
 
-bool Quaternioni::isNorm () const
+template <class X>  bool Quaternioni<X>::isNorm () const
 	{return (abs((this->norm())-1)<=0.01);}
 
-double Quaternioni::Get_Cr() const {
+template <class X> X  Quaternioni<X>::Get_Cr() const {
 	return this->componenti[0];}
 
-double Quaternioni::Get_Ci() const {
+template <class X> X  Quaternioni<X>::Get_Ci() const {
 	return this->componenti[1];}
 
-double Quaternioni::Get_Cj() const {
+template <class X> X  Quaternioni<X>::Get_Cj() const {
 	return this->componenti[2];}
 
-double Quaternioni::Get_Ck() const{
+template <class X> X  Quaternioni<X>::Get_Ck() const{
 	return this->componenti[3];}
 
-ostream & operator << (ostream & o, const Quaternioni b) //scrittura
+template <class X> ostream & operator << (ostream & o, const Quaternioni <X> b) //scrittura
 	{return o <<setprecision(3) <<fixed <<noshowpos  << b.componenti[0]
 	<<showpos  <<b.componenti[1] <<"i"  
 	<<b.componenti[2] <<"j" 
 	<<b.componenti[3] <<"k";}
  
-SOtre::SOtre(Quaternioni q): s(1/(q.norm()*(q.norm()))) {
+template <class X> SOtre<X>::SOtre(Quaternioni <X> q): s(1/(q.norm()*(q.norm()))) {
 	elemento[0][0]=1-2*s*(q.Get_Cj()*q.Get_Cj()+q.Get_Ck()*q.Get_Ck()),  
 	elemento[0][1]=2*s*(q.Get_Ci()*q.Get_Cj()-q.Get_Ck()*q.Get_Cr()),       
 	elemento[0][2]=2*s*(q.Get_Ci()*q.Get_Ck()+q.Get_Cj()*q.Get_Cr()), 
@@ -173,64 +216,62 @@ SOtre::SOtre(Quaternioni q): s(1/(q.norm()*(q.norm()))) {
 	elemento[2][1]=2*s*(q.Get_Cj()*q.Get_Ck()+q.Get_Ci()*q.Get_Cr()), 
 	elemento[2][2]=1-2*s*(q.Get_Ci()*q.Get_Ci()+q.Get_Cj()*q.Get_Cj());}
 
-double SOtre::Get_El11() const 
+template <class X> X SOtre<X>::Get_El11() const 
 	{return this->elemento[0][0];}
 
-double SOtre::Get_El12() const
+template <class X> X SOtre<X>::Get_El12() const
 	{return this->elemento[0][1];}
 
-double SOtre::Get_El13() const 
+template <class X> X SOtre<X>::Get_El13() const 
 	{return this->elemento[0][2];}
 	
-double SOtre::Get_El21() const 
+template <class X> X SOtre<X>::Get_El21() const 
 	{return this->elemento[1][0];}
 	
-double SOtre::Get_El22() const 
+template <class X> X SOtre<X>::Get_El22() const 
 	{return this->elemento[1][1];}
 
-double SOtre::Get_El23() const 
+template <class X> X SOtre<X>::Get_El23() const 
 	{return this->elemento[1][2];}
 
-double SOtre::Get_El31() const 
+template <class X>  X SOtre<X>::Get_El31() const 
 	{return this->elemento[2][0];}
 
-double SOtre::Get_El32() const 
+template <class X> X  SOtre<X>::Get_El32() const 
 	{return this->elemento[2][1];}
 
-double SOtre::Get_El33() const 
+template <class X> X  SOtre<X>::Get_El33() const 
 	{return this->elemento[2][2];}
 
 
 
-ostream & operator << (ostream & o, const SOtre a)  //scrittura SO3
+template <class X> ostream & operator << (ostream & o, const SOtre<X> a)  //scrittura SO3
 	{ return  o <<fixed <<setprecision(2)  
 	<<setw(12) <<a.elemento[0][0] <<setw(12) <<a.elemento[0][1]  <<setw(12) <<a.elemento[0][2] <<endl
 	<<setw(12) <<a.elemento[1][0] <<setw(12) <<a.elemento[1][1]  <<setw(12) <<a.elemento[1][2] <<endl
 	<<setw(12) <<a.elemento[2][0] <<setw(12) <<a.elemento[2][1]  <<setw(12) <<a.elemento[2][2]  <<endl;}
 
 
-Vettori::Vettori(Quaternioni q) {
-	coordinate[0]=q.Get_Ci()/(sin(acos(q.Get_Cr())));
-	coordinate[1]=q.Get_Cj()/(sin(acos(q.Get_Cr())));
-	coordinate[2]=q.Get_Ck()/(sin(acos(q.Get_Cr())));}
+template <class X> Vettori<X>::Vettori(Quaternioni <X> q) {
+	coordinate[0]=q.Get_Ci()/(sqrt(1-q.Get_Cr()*q.Get_Cr()));
+	coordinate[1]=q.Get_Cj()/(sqrt(1-q.Get_Cr()*q.Get_Cr()));
+	coordinate[2]=q.Get_Ck()/(sqrt(1-q.Get_Cr()*q.Get_Cr()));}
 
-double Vettori::Get_x() const {
+template <class X> X Vettori<X>::Get_x() const {
 	return this->coordinate[0];}
 
-double Vettori::Get_y() const  {
+template <class X> X  Vettori<X>::Get_y() const  {
 	return this->coordinate[1];}
 
-double Vettori::Get_z() const  {
+template <class X> X  Vettori<X>::Get_z() const  {
 	return this->coordinate[2];}
 
 
-ostream & operator << (ostream & o, const Vettori v)  //scrittura
+template <class X> ostream & operator << (ostream & o, const Vettori <X> v)  //scrittura
 	{return o <<setprecision(2) <<fixed <<noshowpos 
 	<<(v.coordinate[0]) <<' ' 
 	<<(v.coordinate[1]) <<' '
 	<<(v.coordinate[2]);}
-
-
 
 
 
