@@ -14,30 +14,30 @@ void decisione ()
 void caratteristiche ()
 	{cout <<"Vuoi conoscere le caratteristiche di questo quaternione?(s/n) ";}
 
-void funz (Quaternioni *p) {
+void funz (Quaternioni<double> *p) {
 	cout <<"Per i due quaternioni le operazioni danno i seguenti risultati:\n" 
 	<<"\033[36m" <<"Somma " <<"\033[0m"  <<p[0]+p[1] <<endl 
 	<<"\033[36m" <<"Differenza " <<"\033[0m" <<p[0]-p[1] <<endl
 	<<"\033[36m" <<"Prodotto " <<"\033[0m" <<p[0]*p[1] <<endl 
 	<<"\033[36m" <<"Distanza " <<"\033[0m" <<(p[0]|p[1]) <<endl <<endl ;};
 
-void funzuno (Quaternioni *p) {
+void funzuno (Quaternioni<double> *p) {
 	funz(p);
-	SOtre matricefin(p[1]*p[0]);
-	Vettori v(p[1]*p[0]);
-	cout <<"La composizione delle due trasformazioni (eseguite nell'ordine di immissione dei Quaternioni) è una rotazione di " <<((p[1]*p[0]).angle()) <<" radianti\n" 
+	SOtre<double> matricefin(p[1]*p[0]);
+	Vettori<double> v(p[1]*p[0]);
+	cout <<"La composizione delle due trasformazioni (eseguite nell'ordine di immissione dei quaternioni) è una rotazione di " <<((p[1]*p[0]).angle()) <<" radianti\n" 
 	<< "attorno al vettore " <<v <<endl
 	<<"La trasformazione è rappresentata dalla seguente matrice\n" <<matricefin   <<endl
 	;};
 
 
 
-void solitario (Quaternioni p) 
+void solitario (Quaternioni<double> p) 
 	{cout <<"Il quaternione inserito ha:\n" <<"\033[36m"<< "Modulo " <<"\033[0m"<<(p.norm()) <<endl <<"\033[36m" 		<<"Inverso " <<"\033[0m" <<!p  <<endl <<"\033[36m" <<"Coniugato " <<"\033[0m" <<~p <<endl <<endl;};
 
-void solitariouno (Quaternioni p) {
-	SOtre m(p);
-	Vettori vector(p);
+void solitariouno (Quaternioni<double> p) {
+	SOtre<double> m(p);
+	Vettori<double> vector(p);
 	cout <<"Il quaternione inserito ha\n" <<endl <<"\033[36m" <<"Inverso " <<"\033[0m" <<!p <<endl 
 	<<"\033[36m" <<"Coniugato " <<"\033[0m" <<~p <<endl 
 	<< "Modulo 1 perciò è associato ad una rotazione nel 3-spazio " <<endl 
@@ -60,7 +60,7 @@ while(scelta!='1'&& scelta!='2' && scelta!='3')
  switch (scelta)
 {case '1':
 	{cont=0;
-	Quaternioni ar[2];
+	Quaternioni<double> ar[2];
 	while (cont<=1) {	
 		decisione ();
 		cin >> scelta;
@@ -88,7 +88,7 @@ while(scelta!='1'&& scelta!='2' && scelta!='3')
 				{cin.clear(); cin.ignore(200, '\n'); cout <<"Input non valido\n";
 				cout<<"Scrivi l'angolo di rotazione in radianti\n"; cin >>a; cin.ignore(200, '\n');}
 
-			Quaternioni p(a,ax);
+			Quaternioni<double> p(a,ax);
 			cout << "Il quaternione che rappresenta questa trasformazione è " <<p <<endl; ar[cont]=p; 
 			++cont; break;} //fine case u
 	
@@ -100,7 +100,7 @@ while(scelta!='1'&& scelta!='2' && scelta!='3')
 				cout<<"Scrivi le componenti del quaternione\n"; 
 				cin >>a >>b >>c >>d; cin.ignore(200, '\n');}
 
-			Quaternioni l(a,b,c,d); ar[cont]=l; ++cont;
+			Quaternioni<double> l(a,b,c,d); ar[cont]=l; ++cont;
 			break;} //fine case g
 
 		;}//fine switch
@@ -143,8 +143,8 @@ case '2':{
 				cin >>a; cin.ignore(200, '\n');}
 
 			double ax[3]={b,c,d};
-			Quaternioni q(a,ax);
-			SOtre matriceq(q);
+			Quaternioni<double> q(a,ax);
+			SOtre<double> matriceq(q);
 			cout<< "Il quaternione che rappresenta questa trasformazione è " <<q  <<" associato alla seguente matrice\n" <<matriceq <<endl; 
 			solitario(q);
 			break;} //fine case u
@@ -158,7 +158,7 @@ case '2':{
 				cout<<"Scrivi le componenti del quaternione\n"; 
 				cin >>a >>b >>c >>d; cin.ignore(200, '\n');}
 
-			Quaternioni l(a,b,c,d);
+			Quaternioni<double> l(a,b,c,d);
 
 			if(l.isNorm(0.01)) 
 				{solitariouno(l);}
@@ -185,7 +185,7 @@ case '2':{
 
 
 case '3': {
-	std::vector<Quaternioni> v;
+	std::vector<Quaternioni<double>> v;
 	cout <<"Scrivi le componenti del vettore da ruotare\n"; 
 	cin >>x >>y >>z;
 
@@ -193,8 +193,8 @@ case '3': {
 		{cin.clear(); cin.ignore(200, '\n');cout<<"Input non valido\n"; 
 		cout <<"Scrivi le componenti del vettore da ruotare"; cin >>a >>b >>c;}
 
-	Quaternioni ruotando(0,x,y,z);
-	Quaternioni r;
+	Quaternioni<double> ruotando(0,x,y,z);
+	Quaternioni<double> r;
 
 	while(i)
 		{cout <<"Attorno a che vettore vuoi ruotare?";
@@ -213,7 +213,7 @@ case '3': {
 			cout <<"Di che angolo vuoi ruotare?"; cin >>a; cin.ignore(200,'\n') ;}
 
 		double ax[3]={b,c,d};
-		Quaternioni r(a,ax);
+		Quaternioni<double> r(a,ax);
 		v.push_back(r);
 		(char) i;
 		cout <<"Vuoi ruotare il vettore ottenuto attorno un altro vettore? (s/n)";
@@ -229,19 +229,20 @@ case '3': {
 		if (i=='s') i=true ;
 		if (i=='n') i=false;
 		} //fine while 3
-	Quaternioni risultato;
+
+	Quaternioni<double> risultato;
 
 	for (int i=1; i<=(v.size()-1); ++i) 
 		{v[v.size()-1]*=v[v.size()-1-i];}
- 
+ 	
 	risultato=v[v.size()-1].rot(ruotando);
 	cout <<"Il vettore ottenuto dall'insieme delle rotazioni è:" 
 	<<risultato.Get_Ci() <<' '
 	<<risultato.Get_Cj() <<' ' 
 	<<risultato.Get_Ck();
 
-	Vettori vet(v[v.size()-1]);
-	SOtre matrice(v[v.size()-1]); 
+	Vettori<double> vet(v[v.size()-1]);
+	SOtre<double> matrice(v[v.size()-1]); 
 	cout <<"\nL'insieme delle rotazioni compiute corrisponde ad un'unica rotazione di " 
 	<<(v[v.size()-1].angle()) <<" radianti attorno al vettore " <<vet <<endl 
 	<<"La matrice che rappresenta la rotazione è\n" <<matrice;
