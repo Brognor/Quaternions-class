@@ -1,36 +1,42 @@
 #ifndef QUATERNIONI_H
 #define QUATERNIONI_H
 
-class Quaternioni { 
-	double componenti [4]; //componenti
+
+template <class X> class Quaternioni { 
+	X componenti [4]; //componenti
+
 	public:
-	Quaternioni & operator = (Quaternioni); //assegnamento 
+	Quaternioni<X> & operator = (Quaternioni<X>); //assegnamento 
 
-	Quaternioni & operator += (Quaternioni); //+=	
+	Quaternioni<X> & operator += (Quaternioni<X>); //+=	
 	
-	Quaternioni & operator -= (Quaternioni); //-=
+	Quaternioni<X> & operator -= (Quaternioni<X>); //-=
 
-	Quaternioni & operator *= (Quaternioni); //*=
-
-	Quaternioni & operator *= (double); // *= scalare
+	Quaternioni<X> & operator += (const X); //+= num
 	
-	Quaternioni & operator /= (double); // /= scalare
+	Quaternioni<X> & operator -= (const X); //-= num
 
-	friend Quaternioni  operator !(const Quaternioni); //inverso
+	Quaternioni<X> & operator *= (Quaternioni<X>); //*=
 
-	friend Quaternioni operator ~ (const Quaternioni); //coniugato
-
-	friend bool operator == (const Quaternioni &, const Quaternioni &);
-
-	friend bool operator != (const Quaternioni &, const Quaternioni &);
-
-	Quaternioni ()=default;
-
-	Quaternioni(double , double , double , double );
-
-	Quaternioni(double , double *);
+	Quaternioni<X> & operator *= (X); // *= scalare
 	
-	Quaternioni rot (Quaternioni) const ;
+	Quaternioni<X> & operator /= (X); // /= scalare
+
+	template <class Y> Quaternioni <Y>   friend operator !(const Quaternioni <Y>); //inverso
+
+	template <class Y> Quaternioni <Y> friend   operator ~ (const Quaternioni <Y>); //coniugato
+
+	template <class Y> bool friend operator == (const Quaternioni<Y> &, const Quaternioni<Y> &);
+		 
+	template <class Y> bool friend operator != (const Quaternioni<Y> &, const Quaternioni<Y> &);
+
+	Quaternioni<X> ()=default;
+
+	Quaternioni<X> (X , X , X , X );
+
+	Quaternioni<X> (X , X *);
+	
+	Quaternioni<X> rot (Quaternioni<X>) const ;
 
 	bool isNorm  (double)const;
 
@@ -40,83 +46,96 @@ class Quaternioni {
 
 	double angle () const; //angolo di rotazione
 
-	double Get_Cr() const; //Getter quaternioni
+	X Get_Cr() const; //Getter quaternioni
 
-	double Get_Ci() const;
+	X Get_Ci() const;
 
-	double Get_Cj() const;
+	X Get_Cj() const;
 
-	double Get_Ck()const;
+	X Get_Ck()const;
 
-	friend std::ostream & operator << (std::ostream & , const Quaternioni ); //scrittura
+template <class Y> friend std::ostream &  operator << (std::ostream & , const Quaternioni <Y> ); //scrittura
 
 };// [Quaternioni]
 
-	Quaternioni operator + (const Quaternioni, const Quaternioni ); //somma
+template <class X> Quaternioni<X> operator + (Quaternioni<X> const, const Quaternioni<X>);//somma
 
-	Quaternioni operator - (Quaternioni const, const Quaternioni); //sottrazione	
+template <class X> Quaternioni<X> operator - (Quaternioni<X> const, const Quaternioni<X>); //sottrazione
 
-	Quaternioni operator * (Quaternioni const, const Quaternioni); //prodotto
+template <class X> Quaternioni<X> operator += ( X, const Quaternioni <X>);//+= num
+
+template <class X> Quaternioni<X> operator -= (X, const Quaternioni <X>); //-= num
+
+template <class X> Quaternioni<X> operator + (const X, const Quaternioni<X>);//num somma 
+
+
+template <class X> Quaternioni<X> operator - (const Quaternioni<X> , const X); //sottrazione num
+
+template <class X> Quaternioni<X> operator + (const X, const Quaternioni<X>);//num somma 
+
+template <class X> Quaternioni<X> operator - (const X, const Quaternioni<X>); //num sottrazione 
+
+template <class X> Quaternioni<X> operator * (Quaternioni<X> const, const Quaternioni<X>); //prodotto
 	
-	double operator | (const Quaternioni, const Quaternioni); //distanza
+template <class X> double operator | (const Quaternioni<X>, const Quaternioni<X>); //distanza
 
-	Quaternioni operator -(const Quaternioni ); // opposto
+template <class X> Quaternioni<X> operator -(const Quaternioni<X> ); // opposto
 
-	Quaternioni operator +(const Quaternioni); // se stesso medesimo
+template <class X> Quaternioni<X> operator +(const Quaternioni<X>); // se stesso medesimo
 	
-	Quaternioni operator * (const Quaternioni, double); // * scalare
+template <class X> Quaternioni<X> operator * (const Quaternioni<X>, X); // * scalare
 
-	Quaternioni operator / (const Quaternioni, double); // / scalare	
+template <class X> Quaternioni<X> operator / (const Quaternioni<X>, X); // / scalare	
 
-	Quaternioni operator * (double, const Quaternioni); // * scalare	
+template <class X> Quaternioni<X> operator * (const X, const Quaternioni<X>); // * scalare	
 
-	Quaternioni operator *= (double, const Quaternioni); // *= scalare
+template <class X> Quaternioni<X> operator *= (X, const Quaternioni<X>); // *= scalare
 
-class SOtre //Struct SO3
+template < class X> class SOtre //Struct SO3
 
-	{double elemento [3][3];
+	{X elemento [3][3];
 	double s;
 
 	public:
-	SOtre(Quaternioni);
+	SOtre(Quaternioni <X>);
 	
 	SOtre()=default;
 
-	friend std::ostream & operator << (std::ostream & , const SOtre ) ;//scrittura SO3
+template <class Y> friend std::ostream & operator << (std::ostream & , const SOtre<Y> ) ;//scrittura SO3
 
-	double Get_El11() const ; //Getter matrice
+	X Get_El11() const ; //Getter matrice
 
-	double Get_El12() const ;
+	X Get_El12() const ;
 
-	double Get_El13() const ;
+	X Get_El13() const ;
 
-	double Get_El21() const ;
+	X Get_El21() const ;
 
-	double Get_El22() const ;
+	X Get_El22() const ;
 
-	double Get_El23() const ;
+	X Get_El23() const ;
 
-	double Get_El31() const ;
+	X Get_El31() const ;
 
-	double Get_El32() const ;
+	X Get_El32() const ;
 
-	double Get_El33() const;}; //[SO3]
+	X Get_El33() const;}; //[SO3]
 
-class Vettori{
-	double coordinate[3];
+template <  class X> class Vettori{
+	X coordinate[3];
 	public:
 	Vettori()=default;
 
-	Vettori(Quaternioni);
+	Vettori(Quaternioni <X>);
 
-	friend std::ostream & operator << (std::ostream & , const Vettori ) ;
+template <  class Y> friend std::ostream & operator << (std::ostream & , const Vettori<Y> ) ;
 
-	double Get_x() const ; //Getter vettori
+	X Get_x() const ; //Getter vettori
 
-	double Get_y() const ;
+	X Get_y() const ;
 
-	double Get_z() const ;
+	X Get_z() const ;
 };//[Vettori]
 
-#endif
 
+#endif
